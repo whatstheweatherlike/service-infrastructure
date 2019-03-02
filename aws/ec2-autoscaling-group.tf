@@ -15,8 +15,8 @@ resource "aws_launch_configuration" "ecs-cluster-weather-service" {
 
 resource "aws_autoscaling_group" "ecs-cluster-weather-service" {
   name = "${aws_ecs_cluster.weather-service.name}"
-  availability_zones = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
-  desired_capacity   = 1
+  availability_zones = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"]
+  desired_capacity   = 2
   max_size           = 3
   min_size           = 1
 

@@ -17,21 +17,16 @@ module "weather-service-container-definition" {
     protocol      = "tcp"
   }]
 
-  // FIXME Error: aws_ecs_task_definition.weather-service: ECS Task Definition container_definitions is invalid: Error decoding JSON: json: cannot unmarshal string into Go struct field HealthCheck.Command of type []*string
   healthcheck = {
-    //    command = "curl -f http://localhost/actuator/health || exit 1",
-    //    interval = "60",
-    //    retries = 3,
-    //    startPeriod = 60
+    command = ["curl -f http://localhost/actuator/health || exit 1"],
+    interval = 60,
+    retries = 3,
+    startPeriod = 60
   }
 
   log_options = {
-    awslogs-region = "eu-central-1"
-    awslogs-group = "/ecs/weather-service"
+    awslogs-region = "${var.aws_region}"
+    awslogs-group = "/ecs/${aws_ecs_cluster.weather-service.name}"
   }
 
-}
-
-output "container-definition-json" {
-  value = "${module.weather-service-container-definition.json}"
 }
