@@ -1,5 +1,5 @@
 resource "aws_iam_instance_profile" "ecs_cluster" {
-  name = "ecs-cluster-instance-profile"
+  name = "${aws_ecs_cluster.weather_service.name}-ecs-cluster-ip"
   role = "${aws_iam_role.ecs_cluster.name}"
 }
 
@@ -14,7 +14,7 @@ resource "aws_iam_role_policy_attachment" "ecs_ec2_cloudwatch_role" {
 }
 
 resource "aws_iam_role" "ecs_cluster" {
-  name = "ecsClusterIamRole"
+  name = "${aws_ecs_cluster.weather_service.name}-ecs-cluster-iam-role"
 
   assume_role_policy = <<EOF
 {

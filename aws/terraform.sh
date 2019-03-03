@@ -12,6 +12,8 @@ function main {
 
   local command="$1"; shift
 
+  terraform init
+
   terraform "$command" \
     -var-file="$cwd/variables.tfvars" \
     -var "aws_access_key=$AWS_ACCESS_KEY_ID" \

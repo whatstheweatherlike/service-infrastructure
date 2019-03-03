@@ -1,4 +1,4 @@
-module "weather-service-container-definition" {
+module "weather_service_container_definition" {
   source  = "git::https://github.com/cloudposse/terraform-aws-ecs-container-definition.git"
 
   container_name  = "weather-service-latest"
@@ -13,12 +13,12 @@ module "weather-service-container-definition" {
 
   port_mappings = [{
     containerPort = 8080
-    hostPort      = 80
+    hostPort      = 8080
     protocol      = "tcp"
   }]
 
   healthcheck = {
-    command = ["curl -f http://localhost/actuator/health || exit 1"],
+    command = ["curl -f http://localhost:8080/actuator/health || exit 1"],
     interval = 60,
     retries = 3,
     startPeriod = 60
@@ -26,7 +26,7 @@ module "weather-service-container-definition" {
 
   log_options = {
     awslogs-region = "${var.aws_region}"
-    awslogs-group = "/ecs/${aws_ecs_cluster.weather-service.name}"
+    awslogs-group = "/ecs/${aws_ecs_cluster.weather_service.name}"
   }
 
 }

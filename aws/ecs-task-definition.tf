@@ -1,6 +1,6 @@
-resource "aws_ecs_task_definition" "weather-service" {
+resource "aws_ecs_task_definition" "weather_service" {
   family                = "weather-service"
-  container_definitions = "${module.weather-service-container-definition.json}"
+  container_definitions = "${module.weather_service_container_definition.json}"
 
   placement_constraints {
     type       = "memberOf"
