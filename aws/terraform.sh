@@ -8,6 +8,8 @@ function main {
     exit 1
   fi
 
+  local deployer_ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+
   local cwd=$(pwd)
 
   local command="$1"; shift
@@ -17,6 +19,7 @@ function main {
   terraform "$command" \
     -var "aws_access_key=$AWS_ACCESS_KEY_ID" \
     -var "aws_secret_key=$AWS_SECRET_ACCESS_KEY" \
+    -var "deployer_cidr=$deployer_ip/32" \
     -var "APPID=$APPID" \
     "$@"
 }
