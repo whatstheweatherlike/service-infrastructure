@@ -23,7 +23,7 @@ resource "aws_launch_configuration" "bastion" {
 
   name   = "${aws_ecs_cluster.weather_service.name}-bastion-lc"
   image_id      = "${data.aws_ami.bastion.image_id}"
-  instance_type = "t2.micro"
+  instance_type = "t2.nano"
 
   key_name = "${aws_key_pair.weather_service.key_name}"
 

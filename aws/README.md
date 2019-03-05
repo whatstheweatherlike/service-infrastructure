@@ -8,20 +8,24 @@ Requirements:
 * terraform install \
   `brew install terraform`
 * aws cli \
-  'brew install awscli'
+  `brew install awscli`
 * an appid required to use [The Openweathermap API](https://openweathermap.org/api)
+* an environment variable `APPID` set to above mentioned value \
+  `export APPID=your_app_id`
 
 In a nutshell
 ---
 
 **Prerequisites:**
 
-Currently there need to be created the service roles for the ECS manually. This is done during the first tutorial where
-the first cluster is created from within the AWS console.
+Currently the service roles for ECS need to be created manually. This is done while running [Getting started with ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_GetStarted_EC2.html). There the first cluster is created from within the AWS console.
 
 **Creation:**
 
 ```bash
+$ cd cert
+$ ./create-self-signed-cert.sh
+$ cd ..
 $ ./terraform plan
 $ ./terraform apply
 ```

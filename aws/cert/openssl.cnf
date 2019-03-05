@@ -1,0 +1,14 @@
+[ req ]
+prompt                      = no
+default_bits                = 2048
+default_keyfile             = keyfile.pem
+distinguished_name          = req_distinguished_name
+prompt                      = no
+
+[ req_distinguished_name ]
+C                      = DE
+ST                     = NRW
+L                      = Warendorf
+O                      = whatstheweatherlike.io
+CN                     = Daniel Hiller
+emailAddress           = info@whatstheweatherlike.io

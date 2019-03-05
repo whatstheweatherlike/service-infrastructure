@@ -17,6 +17,7 @@ resource "aws_launch_configuration" "weather_service" {
     "${aws_security_group.ecs_ec2_instance.id}",
   ]
 
+  // needs to stay enabled, seems that ecs can't find the instances otherwise
   associate_public_ip_address = true
 
   name   = "${aws_ecs_cluster.weather_service.name}-ecs-cluster-lc"

@@ -30,7 +30,7 @@ resource "aws_ecs_task_definition" "weather_service" {
   // FIXME container definitions force new task definition creation everytime, maybe need to use json instead?
   lifecycle {
     ignore_changes = [
-      "container_definitions"
+//      "container_definitions"
     ]
   }
 
@@ -79,14 +79,42 @@ resource "aws_lb" "weather_service" {
   enable_deletion_protection = false
 }
 
+resource "aws_iam_server_certificate" "weather_service" {
+  name_prefix      = "weather-service-cert"
+  certificate_body = "${file("cert/cert.pem")}"
+  private_key      = "${file("cert/key.pem")}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
 resource "aws_lb_listener" "weather_service" {
   load_balancer_arn = "${aws_lb.weather_service.id}"
-  port              = "80"
-  protocol          = "HTTP"
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn = "${aws_iam_server_certificate.weather_service.arn}"
 
   default_action {
     target_group_arn = "${aws_lb_target_group.weather_service.id}"
     type             = "forward"
+  }
+}
+
+resource "aws_lb_listener" "weather_service_http_redirect" {
+  load_balancer_arn = "${aws_lb.weather_service.arn}"
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
@@ -112,6 +140,13 @@ resource "aws_security_group" "lb" {
     protocol    = "tcp"
     from_port   = 80
     to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
     cidr_blocks = ["0.0.0.0/0"]
   }
 
