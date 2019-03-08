@@ -159,3 +159,18 @@ resource "aws_security_group" "lb" {
   }
 }
 
+output "weather_service_dns_name" {
+  value = "${aws_lb.weather_service.dns_name}"
+}
+
+output "weather_service_certificate_record_type" {
+  value = "${aws_acm_certificate.weather_service.domain_validation_options.0.resource_record_type}"
+}
+
+output "weather_service_certificate_record_name" {
+  value = "${aws_acm_certificate.weather_service.domain_validation_options.0.resource_record_name}"
+}
+
+output "weather_service_certificate_record_value" {
+  value = "${aws_acm_certificate.weather_service.domain_validation_options.0.resource_record_value}"
+}

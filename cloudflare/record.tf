@@ -1,18 +1,17 @@
-
 resource "cloudflare_record" "CNAME__30c0e33308510402c9b4391093f82287_api_whatstheweatherlike_io_557f02b0a10501a338020215399ebf1f" {
     domain = "whatstheweatherlike.io"
 
-    name = "_30c0e33308510402c9b4391093f82287.api.whatstheweatherlike.io"
-    type = "CNAME"
+    name = "${data.terraform_remote_state.aws.weather_service_certificate_record_name}"
+    type = "${data.terraform_remote_state.aws.weather_service_certificate_record_type}"
     ttl = "1"
     proxied = "false"
 
+    value = "${data.terraform_remote_state.aws.weather_service_certificate_record_value}"
 
-    value = "_d43661a86c0ee45ae5235112356da198.hkvuiqjoua.acm-validations.aws"
-
-
+    lifecycle {
+        ignore_changes = ["value"]
+    }
 }
-
 
 resource "cloudflare_record" "CNAME_api_whatstheweatherlike_io_4b85a764886bc978832d07506e63bbba" {
     domain = "whatstheweatherlike.io"
@@ -22,10 +21,7 @@ resource "cloudflare_record" "CNAME_api_whatstheweatherlike_io_4b85a764886bc9788
     ttl = "1"
     proxied = "false"
 
-
-    value = "weather-service-lb-582828591.eu-central-1.elb.amazonaws.com"
-
-
+    value = "${data.terraform_remote_state.aws.weather_service_dns_name}"
 }
 
 
@@ -37,10 +33,7 @@ resource "cloudflare_record" "CNAME_email_whatstheweatherlike_io_4c43d8fbacadbb3
     ttl = "1"
     proxied = "true"
 
-
     value = "mailgun.org"
-
-
 }
 
 
@@ -52,10 +45,7 @@ resource "cloudflare_record" "CNAME_whatstheweatherlike_io_b74b6c1c7c5fd2be90e4b
     ttl = "1"
     proxied = "true"
 
-
     value = "www.whatstheweatherlike.io"
-
-
 }
 
 
@@ -67,10 +57,7 @@ resource "cloudflare_record" "CNAME_www_whatstheweatherlike_io_3c89433e61898738f
     ttl = "1"
     proxied = "true"
 
-
     value = "whatstheweatherlike.github.io"
-
-
 }
 
 
@@ -84,10 +71,7 @@ resource "cloudflare_record" "MX_whatstheweatherlike_io_36a971225717b0a6db1b51dc
 
     priority = "10"
 
-
     value = "mxa.mailgun.org"
-
-
 }
 
 
@@ -101,10 +85,7 @@ resource "cloudflare_record" "MX_whatstheweatherlike_io_70c73391dd7da12e72ab9d9a
 
     priority = "10"
 
-
     value = "mxb.mailgun.org"
-
-
 }
 
 
@@ -116,10 +97,7 @@ resource "cloudflare_record" "TXT_k1__domainkey_whatstheweatherlike_io_cb7f4e21a
     ttl = "1"
     proxied = "false"
 
-
     value = "k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBfmE8UgGGzQwSP+2eNv6rtxP4xFdXYd3q7cnwI11/H1jOO/LMRS2H0N2WuS8QxDGXipLvHiyC0BlZxQyYYq9R5WyDRP4gJEM4aZ+ZIuS7MINif3IfPaLD+cfYgmHLYjS4W2g6Y6ixGful7lYjcQaO3cqVMCiRpa106DHcgJTQjQIDAQAB"
-
-
 }
 
 
@@ -131,9 +109,5 @@ resource "cloudflare_record" "TXT_whatstheweatherlike_io_dc41e4a52c8098c0bc155ea
     ttl = "1"
     proxied = "false"
 
-
     value = "v=spf1 include:mailgun.org ~all"
-
-
 }
-
