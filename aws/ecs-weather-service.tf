@@ -30,7 +30,7 @@ resource "aws_ecs_task_definition" "weather_service" {
   // FIXME container definitions force new task definition creation everytime, maybe need to use json instead?
   lifecycle {
     ignore_changes = [
-//      "container_definitions"
+      "container_definitions"
     ]
   }
 
@@ -79,22 +79,20 @@ resource "aws_lb" "weather_service" {
   enable_deletion_protection = false
 }
 
-resource "aws_iam_server_certificate" "weather_service" {
-  name_prefix      = "weather-service-cert"
-  certificate_body = "${file("cert/cert.pem")}"
-  private_key      = "${file("cert/key.pem")}"
+resource "aws_acm_certificate" "weather_service" {
+  domain_name       = "api.whatstheweatherlike.io"
+  validation_method = "DNS"
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-
 resource "aws_lb_listener" "weather_service" {
   load_balancer_arn = "${aws_lb.weather_service.id}"
   port              = "443"
   protocol          = "HTTPS"
-  certificate_arn = "${aws_iam_server_certificate.weather_service.arn}"
+  certificate_arn = "${aws_acm_certificate.weather_service.arn}"
 
   default_action {
     target_group_arn = "${aws_lb_target_group.weather_service.id}"
