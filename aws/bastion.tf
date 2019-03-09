@@ -23,7 +23,7 @@ resource "aws_launch_configuration" "bastion" {
 
   name   = "${aws_ecs_cluster.weather_service.name}-bastion-lc"
   image_id      = "${data.aws_ami.bastion.image_id}"
-  instance_type = "t2.nano"
+  instance_type = "t2.micro"
 
   key_name = "${aws_key_pair.weather_service.key_name}"
 
@@ -36,7 +36,7 @@ resource "aws_launch_configuration" "bastion" {
 resource "aws_autoscaling_group" "bastion" {
   name = "${aws_ecs_cluster.weather_service.name}-bastion-asg"
   vpc_zone_identifier  = ["${aws_subnet.weather_service.*.id}"]
-  desired_capacity   = 1
+  desired_capacity   = 0
   max_size           = 1
   min_size           = 0
 
