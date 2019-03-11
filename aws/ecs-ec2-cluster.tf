@@ -12,6 +12,13 @@ resource "aws_autoscaling_group" "weather_service" {
   launch_configuration = "${aws_launch_configuration.weather_service.name}"
 }
 
+data "aws_instances" "weather_service_ecs_cluster" {
+  filter {
+    name = "instance.group-id"
+    values = ["${aws_security_group.ecs_ec2_instance.id}"]
+  }
+}
+
 resource "aws_launch_configuration" "weather_service" {
   security_groups = [
     "${aws_security_group.ecs_ec2_instance.id}",
@@ -68,6 +75,7 @@ resource "aws_security_group" "ecs_ec2_instance" {
 
     security_groups = [
       "${aws_security_group.lb.id}",
+      "${aws_security_group.prometheus.id}"
     ]
   }
 
