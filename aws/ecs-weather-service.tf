@@ -10,6 +10,8 @@ resource "aws_ecs_service" "weather_service" {
     field = "instanceId"
   }
 
+  health_check_grace_period_seconds = 180
+
   load_balancer {
     target_group_arn = "${aws_lb_target_group.weather_service.arn}"
     container_name   = "weather-service-latest"
@@ -42,7 +44,7 @@ module "weather_service_container_definition" {
   container_name  = "weather-service-latest"
   container_image = "docker.io/whatstheweatherlike/weather-service:latest"
 
-  container_memory = 512
+  container_memory = 768
 
   environment = [{
     name  = "APPID"
@@ -56,10 +58,10 @@ module "weather_service_container_definition" {
   }]
 
   healthcheck = {
-    command = ["curl -f http://localhost:8080/actuator/health || exit 1"],
+    command = [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1" ],
     interval = 60,
     retries = 3,
-    startPeriod = 60
+    startPeriod = 180
   }
 
   log_options = {
@@ -124,7 +126,9 @@ resource "aws_lb_target_group" "weather_service" {
 
   health_check = {
     path = "/actuator/health",
-    port = 8080
+    port = 8080,
+    interval = 60,
+    timeout = 10
   }
 }
 

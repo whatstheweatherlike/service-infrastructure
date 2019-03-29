@@ -9,6 +9,7 @@ function main {
   fi
 
   local deployer_ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+  [ -z "$deployer_ip" ] && deployer_ip=$(curl https://ipinfo.io/ip)
 
   local cwd=$(pwd)
 
