@@ -23,7 +23,9 @@ function main {
         exit 1
     fi
 
-    export APPID="$1"
+    APPID="$1"
+
+    kubectl create configmap weather-service-config --from-literal=openweathermap.api.key=$APPID
 
     [ ! -d "build" ] && mkdir build
     LOG_FILE="build/create_k8s_service.log"
@@ -33,7 +35,7 @@ function main {
     set -e
     if [ $result -ne 0 ]; then
         echo "Creating deployment..."
-        (envsubst < weather-service-deployment.yaml | kubectl create -f -) > $LOG_FILE 2>&1
+        kubectl create -f weather-service-deployment.yaml > $LOG_FILE 2>&1
     fi
 
     set +e

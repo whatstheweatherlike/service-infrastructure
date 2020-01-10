@@ -16,12 +16,15 @@ spec:
       containers:
         - name: "weather-service"
           image: "docker.io/whatstheweatherlike/weather-service"
-          env:
-          - name: "APPID"
-            value: "$APPID"
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: "File"
           imagePullPolicy: "Always"
+          env:
+          - name: "APPID"
+            valueFrom:
+              configMapKeyRef:
+                name: weather-service-config
+                key: openweathermap.api.key
       restartPolicy: "Always"
       terminationGracePeriodSeconds: 30
       dnsPolicy: "ClusterFirst"
