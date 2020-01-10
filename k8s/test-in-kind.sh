@@ -4,17 +4,22 @@ set -euo pipefail
 function cleanup {
     echo "Cleaning up"
     set +e
-    kubectl delete deployment,service weather-service-node > $LOG_FILE 2>&1
+    (
+        kubectl delete deployment weather-service-node
+        kubectl delete service weather-service
+        kubectl delete ingress weather-service-ingress
+    ) > $LOG_FILE 2>&1
     set -e
 }
 
-function check_minikube_running {
+function check_ingress_running {
     set +e
-    minikube status > $LOG_FILE 2>&1
+    kubectl get deployment nginx-ingress-controller -n ingress-nginx > $LOG_FILE 2>&1
     result=$?
     set -e
     if [ $result -ne 0 ]; then
-        echo "Minikube not running!"
+        echo "no ingress running!"
+        echo "See https://kind.sigs.k8s.io/docs/user/ingress/"
         exit 1
     fi
 }
@@ -30,12 +35,12 @@ function main {
 
     trap cleanup SIGINT SIGTERM EXIT
 
-    check_minikube_running
+    check_ingress_running
 
-    create_k8s_service.sh $APPID
+    create-k8s-service.sh $APPID
 
     # Smoke test
-    service_url=$(minikube service weather-service-node --url)
+    service_url="localhost"
     echo "Smoke test using url $service_url"
     num_retries=3
     retries=$num_retries

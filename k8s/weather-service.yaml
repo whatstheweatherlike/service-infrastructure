@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weather-service 
+spec:
+  selector:
+    app: weather-service-node 
+  ports:
+    - port: 80
+      targetPort: 8080
